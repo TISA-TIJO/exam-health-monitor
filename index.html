@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Exam Health Monitor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-icon">💚</div>
+      <div>
+        <h1>Exam Health Monitor</h1>
+        <p>Track your wellness. Prevent burnout. Ace your exams.</p>
+      </div>
+    </header>
+
+    <!-- Burnout Alert (shown only when critical) -->
+    <div class="alert-card" id="alertCard">
+      <span class="alert-icon">⚠️</span>
+      <div>
+        <strong>Burnout Warning!</strong>
+        <p id="alertText">Your burnout score is critical. Please rest immediately, sleep early, drink water, and avoid screens.</p>
+      </div>
+    </div>
+
+    <!-- Score Ring -->
+    <div class="score-card">
+      <p class="score-label">Burnout Risk Score</p>
+      <div class="score-ring-wrap">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="55" fill="none" stroke="#e8f5e9" stroke-width="12"/>
+          <circle id="scoreCircle" cx="70" cy="70" r="55" fill="none" stroke="#2e7d32" stroke-width="12"
+            stroke-dasharray="345" stroke-dashoffset="345" stroke-linecap="round"
+            transform="rotate(-90 70 70)"/>
+        </svg>
+        <div class="score-center">
+          <span class="score-num" id="scoreNum">0</span>
+          <span class="score-sub">/ 100</span>
+        </div>
+      </div>
+      <span class="score-badge" id="scoreBadge">Healthy</span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('track', this)">📊 Track</button>
+      <button class="tab" onclick="switchTab('focus', this)">⏱ Focus</button>
+      <button class="tab" onclick="switchTab('wellness', this)">😊 Wellness</button>
+      <button class="tab" onclick="switchTab('ai', this)">✨ AI Advice</button>
+    </div>
+
+    <!-- TRACK TAB -->
+    <div class="tab-content active" id="tab-track">
+      <div class="metrics-grid">
+
+        <div class="metric-card">
+          <div class="metric-top">
+            <span class="metric-emoji">🌙</span>
+            <span class="metric-title">Sleep</span>
+          </div>
+          <div class="metric-value"><span id="sleepVal">7</span> <small>hrs</small></div>
+          <input type="range" min="0" max="12" step="0.5" value="7" oninput="updateMetric('sleep', this.value)"/>
+          <div class="bar-wrap"><div class="bar-fill" id="sleepBar" style="width:58%;background:#7986cb"></div></div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top">
+            <span class="metric-emoji">💧</span>
+            <span class="metric-title">Water</span>
+          </div>
+          <div class="metric-value"><span id="waterVal">1.5</span> <small>L</small></div>
+          <input type="range" min="0" max="4" step="0.25" value="1.5" oninput="updateMetric('water', this.value)"/>
+          <div class="bar-wrap"><div class="bar-fill" id="waterBar" style="width:37%;background:#26a69a"></div></div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top">
+            <span class="metric-emoji">📚</span>
+            <span class="metric-title">Study Time</span>
+          </div>
+          <div class="metric-value"><span id="studyVal">4</span> <small>hrs</small></div>
+          <input type="range" min="0" max="16" step="0.5" value="4" oninput="updateMetric('study', this.value)"/>
+          <div class="bar-wrap"><div class="bar-fill" id="studyBar" style="width:25%;background:#42a5f5"></div></div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top">
+            <span class="metric-emoji">📱</span>
+            <span class="metric-title">Screen Time</span>
+          </div>
+          <div class="metric-value"><span id="screenVal">3</span> <small>hrs</small></div>
+          <input type="range" min="0" max="16" step="0.5" value="3" oninput="updateMetric('screen', this.value)"/>
+          <div class="bar-wrap"><div class="bar-fill" id="screenBar" style="width:19%;background:#ef5350"></div></div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top">
+            <span class="metric-emoji">🚶</span>
+            <span class="metric-title">Breaks</span>
+          </div>
+          <div class="metric-value"><span id="breakVal">2</span> <small>today</small></div>
+          <input type="range" min="0" max="12" step="1" value="2" oninput="updateMetric('break', this.value)"/>
+          <div class="bar-wrap"><div class="bar-fill" id="breakBar" style="width:17%;background:#66bb6a"></div></div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top">
+            <span class="metric-emoji">😰</span>
+            <span class="metric-title">Stress Level</span>
+          </div>
+          <div class="metric-value"><span id="stressVal">5</span> <small>/ 10</small></div>
+          <input type="range" min="1" max="10" step="1" value="5" oninput="updateMetric('stress', this.value)"/>
+          <div class="bar-wrap"><div class="bar-fill" id="stressBar" style="width:50%;background:#ffa726"></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOCUS TAB -->
+    <div class="tab-content" id="tab-focus">
+      <div class="card">
+        <h2 class="card-title">⏱ Pomodoro Timer</h2>
+        <div class="pomodoro">
+          <div class="pomo-time" id="pomoTime">25:00</div>
+          <p class="pomo-label" id="pomoLabel">Focus session — 25 minutes</p>
+          <div class="pomo-btns">
+            <button class="btn-pomo" id="pomoStartBtn" onclick="togglePomo()">▶ Start</button>
+            <button class="btn-pomo" onclick="resetPomo()">↺ Reset</button>
+          </div>
+          <div class="pomo-progress-wrap">
+            <div class="pomo-progress-fill" id="pomoFill" style="width:100%"></div>
+          </div>
+        </div>
+        <div class="streak-section">
+          <p class="streak-label">This week's study streak</p>
+          <div class="streak-row">
+            <div class="streak-day done">M</div>
+            <div class="streak-day done">T</div>
+            <div class="streak-day done">W</div>
+            <div class="streak-day miss">T</div>
+            <div class="streak-day today">F</div>
+            <div class="streak-day miss">S</div>
+            <div class="streak-day miss">S</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WELLNESS TAB -->
+    <div class="tab-content" id="tab-wellness">
+      <div class="card">
+        <h2 class="card-title">😊 How are you feeling?</h2>
+        <div class="mood-grid">
+          <button class="mood-btn" onclick="selectMood(this, 'Terrible')"><span>😫</span>Terrible</button>
+          <button class="mood-btn" onclick="selectMood(this, 'Bad')"><span>😟</span>Bad</button>
+          <button class="mood-btn" onclick="selectMood(this, 'Okay')"><span>😐</span>Okay</button>
+          <button class="mood-btn" onclick="selectMood(this, 'Good')"><span>🙂</span>Good</button>
+          <button class="mood-btn" onclick="selectMood(this, 'Great')"><span>😄</span>Great</button>
+        </div>
+        <div class="energy-section">
+          <label class="energy-label">Energy level today: <strong id="energyOut">6</strong>/10</label>
+          <input type="range" min="1" max="10" step="1" value="6" oninput="document.getElementById('energyOut').textContent=this.value"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI ADVICE TAB -->
+    <div class="tab-content" id="tab-ai">
+      <div class="card">
+        <h2 class="card-title">✨ AI Wellness Recommendations</h2>
+        <p class="ai-hint">Adjust your metrics in the Track tab, then click the button below for personalized advice.</p>
+        <ul class="rec-list" id="recList">
+          <li class="rec-item">
+            <span class="rec-dot" style="background:#26a69a"></span>
+            <span>Set your health metrics first, then tap "Get AI Advice" below.</span>
+          </li>
+        </ul>
+
+        <!-- API Key Input -->
+        <div class="api-key-section">
+          <label class="api-label">Your Google Gemini API Key</label>
+          <input type="password" id="apiKeyInput" placeholder="AIza..." class="api-input"/>
+          <p class="api-note">🔒 Free from aistudio.google.com — used only in your browser, never stored.</p>
+        </div>
+
+        <button class="btn-ai" id="aiBtn" onclick="getAIAdvice()">✨ Get AI Advice</button>
+        <div class="loading" id="loadingDots" style="display:none">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .app -->
+
+  <script src="script.js"></script>
+</body>
+</html>
